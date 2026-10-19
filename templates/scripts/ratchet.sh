@@ -17,7 +17,10 @@ while [ $# -gt 0 ]; do
     *) echo "ratchet: unknown option $1"; exit 2 ;;
   esac
 done
-[ -n "$max" ] && [ $# -gt 0 ] || { echo "usage: ratchet.sh --name NAME --max N [--match REGEX] [--ok-exit 0,1] -- <command>"; exit 2; }
+if [ -z "$max" ] || [ $# -eq 0 ]; then
+  echo "usage: ratchet.sh --name NAME --max N [--match REGEX] [--ok-exit 0,1] -- <command>"
+  exit 2
+fi
 
 output=$("$@" 2>&1); code=$?
 case ",$ok_exit," in *",$code,"*) ;; *)
