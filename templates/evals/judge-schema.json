@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JudgeVerdict",
+  "type": "object",
+  "required": ["verdict", "correctness", "scope", "tests", "safety", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "verdict": { "enum": ["pass", "partial", "fail", "unknown"] },
+    "correctness": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "scope": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "tests": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "safety": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "unsupported_claims": { "type": "array", "items": { "type": "string" } },
+    "reason": { "type": "string", "maxLength": 600 }
+  }
+}

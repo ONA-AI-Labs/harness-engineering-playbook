@@ -1,0 +1,26 @@
+name: Pattern proposal
+description: Propose a harness pattern, template or lesson for the playbook
+labels: [pattern]
+body:
+  - type: textarea
+    attributes:
+      label: The failure it prevents
+      description: What goes wrong without it. A generic incident is fine; no company internals.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: The pattern
+      description: What to add to a repo (file, hook, script, rule) and how it is enforced.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Evidence
+      description: Links to the source (a post, a paper, a tool's docs) or what you measured.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Expiry condition
+      description: When should this pattern be reviewed or removed (a model capability, a tool feature)?

@@ -1,0 +1,32 @@
+name: Harness gates
+
+# Copy to .github/workflows/harness-gates.yml. The same commands an agent runs locally, nothing more:
+# quick check, full check (tests, build, boot), the debt ratchet, and the harness audit at the level you commit to.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: harness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      # - uses: actions/setup-node@v4
+      #   with: { node-version: "22", cache: npm }
+      - run: <INSTALL_COMMAND>
+      - run: scripts/quick-check.sh
+      - name: Lint findings (no new ones)
+        run: scripts/ratchet.sh --name "lint findings" --max <TODAYS_COUNT> --match "error|warning" -- <LINT_COMMAND_WITH_OUTPUT>
+      - run: scripts/check.sh
+      - name: Harness audit (level 2 or better)
+        # pinned to a release tag: never pipe an unpinned script into CI; or vendor the file into your repo
+        run: curl -fsSL https://raw.githubusercontent.com/ONA-AI-Labs/harness-engineering-playbook/v0.1.0/tools/audit-harness.py | python3 - . --min-level 2

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent = model + harness</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520;
+      --font-sans: 'Geist', system-ui, sans-serif; --font-serif: 'Instrument Serif', serif; --font-mono: 'Geist Mono', ui-monospace, monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400; letter-spacing: -0.02em;
+      line-height: 1.15; color: var(--color-ink); margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · Harness Engineering Playbook</p>
+    <h1>Agent = model + harness</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 392" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="model-and-harness-title model-and-harness-desc">
+        <title id="model-and-harness-title">Agent = model + harness</title>
+        <desc id="model-and-harness-desc">Guides act before the model and sensors after it; both sit inside the harness, which is everything around the model that a team engineers.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+<rect x="104" y="72" width="752" height="248" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+<rect x="392" y="76" width="176" height="12" rx="2" fill="#f5f5f5"/>
+<text x="480" y="85" fill="#5a6580" font-size="7" font-family="'Geist Mono', ui-monospace, monospace" text-anchor="middle" letter-spacing="0.14em">HARNESS · THE PART YOU ENGINEER</text>
+<line x1="336" y1="196" x2="392" y2="196" stroke="#bf4520" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+<rect x="343.4" y="173" width="41" height="12" fill="#f5f5f5"/><text x="364" y="182" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em" text-anchor="middle">BEFORE</text>
+<line x1="592" y1="196" x2="648" y2="196" stroke="#bf4520" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+<rect x="602.0" y="173" width="36" height="12" fill="#f5f5f5"/><text x="620" y="182" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em" text-anchor="middle">AFTER</text>
+<path d="M 748,240 V 272 Q 748,280 740,280 H 500 Q 492,280 492,272 V 248" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+<rect x="576.0" y="289" width="88" height="12" fill="#f5f5f5"/><text x="620" y="298" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em" text-anchor="middle">WHAT WENT WRONG</text>
+<rect x="136" y="152" width="200" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="136" y="152" width="200" height="88" rx="6" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<rect x="148" y="162" width="39" height="12" rx="2" fill="#ececec"/>
+<text x="167.6" y="171" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="7" font-weight="500" letter-spacing="0.14em" text-anchor="middle">GUIDES</text>
+<text x="236.0" y="198" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Instructions and tools</text>
+<text x="236.0" y="214" fill="#4f5d75" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" text-anchor="middle">map · skills · init.sh · allow list</text>
+<rect x="392" y="152" width="200" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="392" y="152" width="200" height="88" rx="6" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.2"/>
+<rect x="404" y="162" width="34" height="12" rx="2" fill="#ececec"/>
+<text x="421.0" y="171" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="7" font-weight="500" letter-spacing="0.14em" text-anchor="middle">MODEL</text>
+<text x="492.0" y="198" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">The model</text>
+<text x="492.0" y="214" fill="#4f5d75" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" text-anchor="middle">decides what code to write</text>
+<rect x="648" y="152" width="200" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="648" y="152" width="200" height="88" rx="6" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<rect x="660" y="162" width="44" height="12" rx="2" fill="#ececec"/>
+<text x="682.2" y="171" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="7" font-weight="500" letter-spacing="0.14em" text-anchor="middle">SENSORS</text>
+<text x="748.0" y="198" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Checks</text>
+<text x="748.0" y="214" fill="#4f5d75" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" text-anchor="middle">lint · tests · boot check · review</text>
+<line x1="40" y1="352" x2="920" y2="352" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<line x1="48" y1="368" x2="72" y2="368" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<text x="80" y="371" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em">ACTS BEFORE / AFTER THE MODEL</text>
+<line x1="278.8" y1="368" x2="302.8" y2="368" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+<text x="310.8" y="371" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em">FEEDBACK</text>
+<rect x="400.4" y="361" width="24" height="14" rx="3" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.2"/>
+<text x="432.4" y="371" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em">THE ONE PART YOU DO NOT CONTROL</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+name: Bug in a template or tool
+description: A template, hook, script or the audit misbehaves
+labels: [bug]
+body:
+  - type: input
+    attributes:
+      label: File
+      validations:
+        required: true
+  - type: textarea
+    attributes:
+      label: What you ran and what happened
+      description: The command, the input (for a hook, the stdin JSON), the output, the expected output.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Tool and version
+      description: e.g. Claude Code 2.x on macOS 15, Codex CLI 0.y on Ubuntu 24.04

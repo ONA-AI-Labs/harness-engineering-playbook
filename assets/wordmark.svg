@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="128" viewBox="0 0 880 128" role="img" aria-label="Harness Engineering Playbook">
+  <rect width="880" height="128" rx="12" fill="#f5f5f5"/>
+  <rect x="40" y="40" width="6" height="48" rx="1" fill="#bf4520"/>
+  <text x="68" y="74" font-family="Georgia, 'Times New Roman', serif" font-size="46" fill="#2d3142">Harness Engineering <tspan fill="#bf4520">Playbook</tspan></text>
+  <text x="70" y="104" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13" letter-spacing="3" fill="#4f5d75">FROM 1 TO PRODUCTION · PATTERNS, TEMPLATES, GATES</text>
+</svg>

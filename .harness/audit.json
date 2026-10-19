@@ -1,0 +1,6 @@
+{
+  "not_applicable": {
+    "ship_check": "a documentation repository: there is no built artifact to boot; `make check` is the whole pipeline",
+    "lockfile": "no package manifest; the tools are Python 3 standard library and bash"
+  }
+}

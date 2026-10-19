@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A harnessed session</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520;
+      --font-sans: 'Geist', system-ui, sans-serif; --font-serif: 'Instrument Serif', serif; --font-mono: 'Geist Mono', ui-monospace, monospace; }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink); min-height: 100vh;
+      display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400; letter-spacing: -0.02em;
+      line-height: 1.15; color: var(--color-ink); margin-bottom: 1.5rem; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · Harness Engineering Playbook</p>
+    <h1>A harnessed session</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 636" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="session-lifecycle-title session-lifecycle-desc">
+        <title id="session-lifecycle-title">A harnessed session</title>
+        <desc id="session-lifecycle-desc">A session reads its state, works on one feature, cannot stop until the quick check passes, and hands off with a progress file and a commit.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+<line x1="480" y1="60" x2="480" y2="96" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="480" y1="148" x2="480" y2="176" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="480" y1="228" x2="480" y2="256" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="480" y1="308" x2="480" y2="344" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="480" y1="416" x2="480" y2="448" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<line x1="480" y1="500" x2="480" y2="536" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<rect x="497.2" y="421" width="26" height="12" fill="#f5f5f5"/><text x="510" y="430" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em" text-anchor="middle">YES</text>
+<path d="M 580,380 H 712 Q 720,380 720,372 V 290 Q 720,282 712,282 H 632" fill="none" stroke="#bf4520" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+<rect x="714.4" y="329" width="67" height="12" fill="#f5f5f5"/><text x="748" y="338" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em" text-anchor="middle">NO · FIX IT</text>
+<rect x="400" y="24" width="160" height="36" rx="18" fill="#f5f5f5"/>
+<rect x="400" y="24" width="160" height="36" rx="18" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<text x="480.0" y="46" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Session starts</text>
+<rect x="328" y="96" width="304" height="52" rx="6" fill="#f5f5f5"/>
+<rect x="328" y="96" width="304" height="52" rx="6" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<text x="480.0" y="126" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Read the map and the progress file, run init.sh</text>
+<rect x="328" y="176" width="304" height="52" rx="6" fill="#f5f5f5"/>
+<rect x="328" y="176" width="304" height="52" rx="6" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<text x="480.0" y="206" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Pick one failing feature</text>
+<rect x="328" y="256" width="304" height="52" rx="6" fill="#f5f5f5"/>
+<rect x="328" y="256" width="304" height="52" rx="6" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<text x="480.0" y="286" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Work, with the guard watching</text>
+<polygon points="480,344 580,380 480,416 380,380" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.2"/>
+<text x="480" y="377" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Quick check passes?</text>
+<text x="480" y="392" fill="#4f5d75" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" text-anchor="middle">the Stop hook runs it</text>
+<rect x="328" y="448" width="304" height="52" rx="6" fill="#f5f5f5"/>
+<rect x="328" y="448" width="304" height="52" rx="6" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<text x="480.0" y="478" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Hand off: progress file, commit, not verified</text>
+<rect x="400" y="536" width="160" height="36" rx="18" fill="#f5f5f5"/>
+<rect x="400" y="536" width="160" height="36" rx="18" fill="#f5f5f5" stroke="#2d3142" stroke-width="1.2"/>
+<text x="480.0" y="558" fill="#2d3142" font-family="'Geist', system-ui, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Session ends clean</text>
+<line x1="40" y1="596" x2="920" y2="596" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<line x1="48" y1="612" x2="72" y2="612" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+<text x="80" y="615" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em">THE SESSION</text>
+<rect x="185.2" y="605" width="24" height="14" rx="3" fill="rgba(191,69,32,0.08)" stroke="#bf4520" stroke-width="1.2"/>
+<text x="217.2" y="615" fill="#5a6580" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" letter-spacing="0.06em">THE GATE THE AGENT CANNOT SKIP</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

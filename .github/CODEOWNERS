@@ -1,0 +1,6 @@
+# Harness files need a maintainer's review; everything else is open to any reviewer.
+/AGENTS.md            @ONA-AI-Labs/maintainers
+/CLAUDE.md            @ONA-AI-Labs/maintainers
+/.claude/             @ONA-AI-Labs/maintainers
+/templates/hooks/     @ONA-AI-Labs/maintainers
+/tools/               @ONA-AI-Labs/maintainers

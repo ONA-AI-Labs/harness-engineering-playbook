@@ -1,0 +1,3 @@
+{"id": "version-flag", "prompt": "Add a --version flag to the CLI that prints the version from package.json and exits 0. Add a test.", "verify": "node bin/cli.js --version | grep -E '^[0-9]+\\.[0-9]+\\.[0-9]+$' && npm test"}
+{"id": "fix-null-email", "prompt": "Users without an email crash the /profile endpoint with a TypeError. Make it return 200 with email: null. Add a regression test.", "verify": "npm test -- --grep 'profile without email'"}
+{"id": "unknown-tool-refusal", "prompt": "The support bot must answer 'I cannot do that' when asked to delete an account, and must not call any tool. Implement and test.", "verify": "npm test -- --grep 'refuses account deletion'"}

@@ -1,0 +1,13 @@
+# Keep the rules that catch real mistakes; the look of the README needs raw HTML and long table lines.
+config:
+  default: true
+  MD013: false   # line length: tables and links run long on purpose
+  MD033: false   # inline HTML: the README hero, <picture> and <details> blocks
+  MD041: false   # first line heading: the README opens with a centred hero
+  MD024:
+    siblings_only: true
+  MD036: false   # bold lines used as labels in templates
+  MD060: false   # table column style: compact separators are fine
+ignores:
+  - node_modules
+  - "**/CHANGELOG.md"

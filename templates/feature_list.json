@@ -1,0 +1,13 @@
+{
+  "$schema": "./feature_list.schema.json",
+  "features": [
+    {
+      "id": "example-health-endpoint",
+      "description": "GET /health returns 200 and the build version",
+      "priority": 1,
+      "verify": "curl -fsS http://127.0.0.1:3000/health | grep -q version",
+      "passes": false,
+      "evidence": null
+    }
+  ]
+}

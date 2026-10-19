@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: Harness Engineering Playbook
+message: If you use this playbook, cite it as below.
+type: software
+authors:
+  - name: Ona AI Labs
+license: MIT
+repository-code: https://github.com/ONA-AI-Labs/harness-engineering-playbook
+version: 0.1.0
+date-released: "2026-10-19"
