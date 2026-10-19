@@ -14,7 +14,7 @@ level2_extras() {
 }
 hooks_file() { # a workspace settings file whose scripts are the real ones
   mkdir -p "$1/.claude"
-  printf '{"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"python3 \\"$CLAUDE_PROJECT_DIR/hooks/guard-destructive.py\\""}]}],"Stop":[{"hooks":[{"type":"command","command":"python3 \\"$CLAUDE_PROJECT_DIR/hooks/stop-quick-check.py\\""}]}]}}' > "$1/.claude/settings.json"
+  printf '{"hooks":{"PreToolUse":[{"matcher":"Bash","hooks":[{"type":"command","command":"python3 \\"$CLAUDE_PROJECT_DIR/hooks/guard-destructive.py\\""}]}],"Stop":[{"hooks":[{"type":"command","command":"python3 \\"$CLAUDE_PROJECT_DIR/hooks/require-check-before-stop.py\\""}]}]}}' > "$1/.claude/settings.json"
   ln -s "$HOOKS" "$1/hooks"
 }
 level3_extras() {
