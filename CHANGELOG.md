@@ -2,6 +2,13 @@
 
 All notable changes to this playbook. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] - 2026-10-20
+
+### Changed
+
+- The guard and the stop check no longer write command text for allowed commands (program name and a short hash only), redact known secret shapes from what they do write, create the metrics file private (0600) and rotate it at 5 MB. `HARNESS_LOG_COMMANDS` selects `none`, `redacted` (default) or `full`. Reported during the first review as the one real defect in the kit.
+- The CI gates template pins the audit script to `v0.1.1`.
+
 ## [0.1.0] - 2026-10-19
 
 ### Added

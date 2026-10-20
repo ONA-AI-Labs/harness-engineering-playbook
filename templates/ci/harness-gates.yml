@@ -29,4 +29,4 @@ jobs:
       - run: scripts/check.sh
       - name: Harness audit (level 2 or better)
         # pinned to a release tag: never pipe an unpinned script into CI; or vendor the file into your repo
-        run: curl -fsSL https://raw.githubusercontent.com/ONA-AI-Labs/harness-engineering-playbook/v0.1.0/tools/audit-harness.py | python3 - . --min-level 2
+        run: curl -fsSL https://raw.githubusercontent.com/ONA-AI-Labs/harness-engineering-playbook/v0.1.1/tools/audit-harness.py | python3 - . --min-level 2

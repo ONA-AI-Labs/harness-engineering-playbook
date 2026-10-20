@@ -5,7 +5,11 @@ Drop-in for Claude Code and Codex. Reads the hook JSON on stdin, prints a
 permissionDecision JSON for deny/ask, prints nothing for allow, always exits 0
 (a broken guard must never block work). Every decision is appended to the
 metrics file (default ~/.claude/metrics/harness.jsonl, override with
-HARNESS_METRICS_FILE) so you can see whether the harness fires.
+HARNESS_METRICS_FILE) so you can see whether the harness fires. The file is
+private (mode 0600) and rotates at 5 MB. Command text is written only for ask
+and deny decisions, with known secret shapes redacted; set HARNESS_LOG_COMMANDS
+to `none` to log decisions only, or `full` on a machine where the log is as
+protected as your shell history.
 
 Policy (per segment of a compound command; the strongest decision wins):
   deny  force-push to main/master; recursive force-delete of /, ~, .git, or
@@ -30,6 +34,7 @@ The named tools (supabase, prisma, kubectl, terraform, the cloud CLIs) are a sta
 list: add the migration and infrastructure tools your repository uses. Codex documents
 `deny` for a hook's decision; treat an `ask` there as a deny until confirmed.
 """
+import hashlib
 import json
 import os
 import re
@@ -45,11 +50,35 @@ TEMP_ROOTS = ["/tmp", "/private/tmp", "/var/folders", "/private/var/folders"]
 RANK = {"allow": 0, "ask": 1, "deny": 2}
 
 
+LOG_MODE = os.environ.get("HARNESS_LOG_COMMANDS", "redacted")  # none | redacted | full
+SECRET_PATTERNS = [
+    (re.compile(r"(?i)(authorization:\s*bearer\s+)\S+"), r"\1[redacted]"),
+    (re.compile(r"(?i)\b([A-Z0-9_]*(?:TOKEN|SECRET|PASSWORD|PASSWD|CREDENTIAL|API_?KEY|PRIVATE_KEY|ACCESS_KEY)[A-Z0-9_]*)=(\"[^\"]*\"|'[^']*'|\S+)"), r"\1=[redacted]"),
+    (re.compile(r"(?i)(--?(?:password|passwd|token|api[-_]?key|secret|access[-_]?key)[= ]+)(\"[^\"]*\"|'[^']*'|\S+)"), r"\1[redacted]"),
+    (re.compile(r"(?i)\b(password|passwd|token|secret|api_?key|access_?key)=([^\s&\"']+)"), r"\1=[redacted]"),
+    (re.compile(r"://([^/\s:@]+):([^@\s/]+)@"), r"://\1:[redacted]@"),
+    (re.compile(r"\b(sk-[A-Za-z0-9_-]{8,}|ghp_[A-Za-z0-9]{8,}|gho_[A-Za-z0-9]{8,}|github_pat_[A-Za-z0-9_]{8,}|AKIA[A-Z0-9]{12,}|xox[abprs]-[A-Za-z0-9-]{8,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{5,})"), "[redacted]"),
+]
+
+
+def redact(text):
+    """Scrub known secret shapes before anything is written to disk."""
+    for pattern, replacement in SECRET_PATTERNS:
+        text = pattern.sub(replacement, text)
+    return text
+
+
 def log(record):
+    """Append one JSON line; the file is private (0600) and rotates at 5 MB. Never raises."""
     try:
         METRICS.parent.mkdir(parents=True, exist_ok=True)
-        with METRICS.open("a") as handle:
+        os.chmod(METRICS.parent, 0o700)
+        if METRICS.is_file() and METRICS.stat().st_size > 5_000_000:
+            METRICS.replace(METRICS.with_suffix(METRICS.suffix + ".1"))
+        fd = os.open(str(METRICS), os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+        with os.fdopen(fd, "a") as handle:
             handle.write(json.dumps(record) + "\n")
+        os.chmod(METRICS, 0o600)
     except OSError:
         pass
 
@@ -272,17 +301,24 @@ def main():
     # the workspace is the project dir Claude Code sets; cwd stands in only when it is missing (hand tests)
     project = os.environ.get("CLAUDE_PROJECT_DIR", "")
     roots = [project] if project else [cwd]
+    record = {"ts": time.time(), "event": "PreToolUse", "tool": tool, "session": data.get("session_id"),
+              "agent_type": data.get("agent_type")}
     if tool in {"Bash", "shell", "bash"}:
         cmd = tool_input.get("command", "") or ""
         decision, reason = judge_command(cmd, cwd, roots)
-        subject = cmd[:200]
+        first = tokens_of(split_segments(cmd)[0]) if split_segments(cmd) else []
+        record["program"] = os.path.basename(first[0]) if first else ""
+        record["cmd_hash"] = hashlib.sha256(cmd.encode("utf-8", "replace")).hexdigest()[:12]
+        # the command text itself is written only for ask/deny, and redacted unless HARNESS_LOG_COMMANDS=full
+        if decision != "allow" and LOG_MODE != "none":
+            record["subject"] = (cmd if LOG_MODE == "full" else redact(cmd))[:200]
     elif tool in {"Edit", "Write", "MultiEdit", "NotebookEdit", "apply_patch"}:
         decision, reason = judge_file(tool_input)
-        subject = (tool_input.get("file_path") or tool_input.get("notebook_path") or "")[:200]
+        record["subject"] = (tool_input.get("file_path") or tool_input.get("notebook_path") or "")[:200]
     else:
         return
-    log({"ts": time.time(), "event": "PreToolUse", "tool": tool, "decision": decision, "reason": reason,
-         "session": data.get("session_id"), "agent_type": data.get("agent_type"), "subject": subject})
+    record.update({"decision": decision, "reason": reason})
+    log(record)
     if decision != "allow":
         print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse",
                                                  "permissionDecision": decision,

@@ -32,3 +32,10 @@ load helpers
   run bash -c "echo '{\"session_id\":\"s\"}' | python3 \"$HOOKS/session-start-context.py\""
   [[ "$output" == *'additionalContext'* ]]; [[ "$output" == *'Next'* ]]
 }
+
+@test "the stop check redacts secrets from the check output it logs" {
+  mkdir -p "$BATS_TEST_TMPDIR/leaky/scripts"; printf '#!/usr/bin/env bash\necho "DB_PASSWORD=hunter2 leaked"; exit 1\n' > "$BATS_TEST_TMPDIR/leaky/scripts/quick-check.sh"; chmod +x "$BATS_TEST_TMPDIR/leaky/scripts/quick-check.sh"
+  printf '{"session_id":"l","tool_name":"Edit","tool_input":{"file_path":"%s/leaky/a.ts"}}' "$BATS_TEST_TMPDIR" | python3 "$HOOKS/track-touched.py"
+  run bash -c "echo '{\"session_id\":\"l\"}' | python3 \"$HOOKS/require-check-before-stop.py\""
+  [[ "$output" == *'"block"'* ]]; [[ "$output" != *'hunter2'* ]]; ! grep -q 'hunter2' "$HARNESS_METRICS_FILE"; grep -q 'DB_PASSWORD=\[redacted\]' "$HARNESS_METRICS_FILE"
+}

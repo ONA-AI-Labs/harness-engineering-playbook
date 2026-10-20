@@ -17,7 +17,7 @@
 
 ## What's new: October 2026
 
-First release, 0.1.0. Fourteen chapters, an eleven-file starter kit, a maturity audit that scores enforcement rather than file presence, hooks for Claude Code and Codex, an eval runner, and field lessons from running agents across six repositories of one product. See the [changelog](CHANGELOG.md).
+0.1.1: the hooks' metrics log is now private, rotated and redacted; allowed commands are logged as a program name and a hash only (see [SECURITY](SECURITY.md)). First release, 0.1.0. Fourteen chapters, an eleven-file starter kit, a maturity audit that scores enforcement rather than file presence, hooks for Claude Code and Codex, an eval runner, and field lessons from running agents across six repositories of one product. See the [changelog](CHANGELOG.md).
 
 ## Table of contents
 

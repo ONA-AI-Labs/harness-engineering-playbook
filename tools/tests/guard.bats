@@ -49,3 +49,15 @@ load helpers
   run bash -c "echo 'not json' | python3 \"$HOOKS/guard-destructive.py\""
   [ "$status" -eq 0 ]; [ -z "$output" ]; grep -q unparseable "$HARNESS_METRICS_FILE"
 }
+
+@test "the log never holds secrets: allow logs only the program, ask/deny log a redacted command, the file is private" {
+  run bash -c "$(declare -f guard bash_event); bash_event 'curl -H \"Authorization: Bearer abc123SECRET\" https://api.example.com' /tmp | guard"
+  [ -z "$output" ]; ! grep -q 'abc123SECRET' "$HARNESS_METRICS_FILE"; grep -q '"program": "curl"' "$HARNESS_METRICS_FILE"; ! grep -q '"subject"' "$HARNESS_METRICS_FILE"
+  run bash -c "$(declare -f guard bash_event); bash_event 'psql postgres://app:p4ssw0rd@db.internal/x -c \"DROP TABLE users\"' /tmp | guard"
+  [[ "$output" == *'"ask"'* ]]; ! grep -q 'p4ssw0rd' "$HARNESS_METRICS_FILE"; grep -q 'app:\[redacted\]@' "$HARNESS_METRICS_FILE"
+  run bash -c "$(declare -f guard bash_event); bash_event 'API_KEY=sk-live-abcdefghijk git push --force origin main' /tmp | guard"
+  [[ "$output" == *'"deny"'* ]]; ! grep -q 'abcdefghijk' "$HARNESS_METRICS_FILE"
+  run bash -c "$(declare -f guard bash_event); HARNESS_LOG_COMMANDS=none; export HARNESS_LOG_COMMANDS; bash_event 'git reset --hard' /tmp | guard"
+  [[ "$output" == *'"ask"'* ]]; ! grep -q 'git reset --hard' "$HARNESS_METRICS_FILE"
+  [ "$(python3 -c 'import os,stat,sys; print(oct(stat.S_IMODE(os.stat(sys.argv[1]).st_mode)))' "$HARNESS_METRICS_FILE")" = "0o600" ]
+}

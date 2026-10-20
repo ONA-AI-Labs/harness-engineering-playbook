@@ -16,7 +16,8 @@ Behaviour:
     same failure on the next stop lets it through with a systemMessage, so a
     pre-existing failure cannot trap the agent in a loop;
   - timeouts and missing tools pass with a systemMessage (fail open);
-  - every run appends one line to the metrics file.
+  - every run appends one line to the metrics file (private, rotated; the check's
+    last output line is redacted of known secret shapes before it is written).
 """
 import json
 import os
@@ -30,11 +31,35 @@ METRICS_DIR = Path(os.environ.get("HARNESS_METRICS_DIR") or (Path.home() / ".cla
 METRICS_FILE = Path(os.environ.get("HARNESS_METRICS_FILE") or (METRICS_DIR / "harness.jsonl"))
 
 
+LOG_MODE = os.environ.get("HARNESS_LOG_COMMANDS", "redacted")  # none | redacted | full
+SECRET_PATTERNS = [
+    (re.compile(r"(?i)(authorization:\s*bearer\s+)\S+"), r"\1[redacted]"),
+    (re.compile(r"(?i)\b([A-Z0-9_]*(?:TOKEN|SECRET|PASSWORD|PASSWD|CREDENTIAL|API_?KEY|PRIVATE_KEY|ACCESS_KEY)[A-Z0-9_]*)=(\"[^\"]*\"|'[^']*'|\S+)"), r"\1=[redacted]"),
+    (re.compile(r"(?i)(--?(?:password|passwd|token|api[-_]?key|secret|access[-_]?key)[= ]+)(\"[^\"]*\"|'[^']*'|\S+)"), r"\1[redacted]"),
+    (re.compile(r"(?i)\b(password|passwd|token|secret|api_?key|access_?key)=([^\s&\"']+)"), r"\1=[redacted]"),
+    (re.compile(r"://([^/\s:@]+):([^@\s/]+)@"), r"://\1:[redacted]@"),
+    (re.compile(r"\b(sk-[A-Za-z0-9_-]{8,}|ghp_[A-Za-z0-9]{8,}|gho_[A-Za-z0-9]{8,}|github_pat_[A-Za-z0-9_]{8,}|AKIA[A-Z0-9]{12,}|xox[abprs]-[A-Za-z0-9-]{8,}|eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{5,})"), "[redacted]"),
+]
+
+
+def redact(text):
+    """Scrub known secret shapes before anything is written to disk."""
+    for pattern, replacement in SECRET_PATTERNS:
+        text = pattern.sub(replacement, text)
+    return text
+
+
 def log(record):
+    """Append one JSON line; the file is private (0600) and rotates at 5 MB. Never raises."""
     try:
         METRICS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with METRICS_FILE.open("a") as handle:
+        os.chmod(METRICS_FILE.parent, 0o700)
+        if METRICS_FILE.is_file() and METRICS_FILE.stat().st_size > 5_000_000:
+            METRICS_FILE.replace(METRICS_FILE.with_suffix(METRICS_FILE.suffix + ".1"))
+        fd = os.open(str(METRICS_FILE), os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+        with os.fdopen(fd, "a") as handle:
             handle.write(json.dumps(record) + "\n")
+        os.chmod(METRICS_FILE, 0o600)
     except OSError:
         pass
 
@@ -83,7 +108,7 @@ def run_check(repo, command, seconds):
     except subprocess.TimeoutExpired:
         return "timeout", "%s: TIMEOUT after %ds" % (command, seconds), time.time() - started
     lines = [l for l in (proc.stdout + "\n" + proc.stderr).splitlines() if l.strip()]
-    summary = lines[-1].strip() if lines else "%s: (no output)" % command
+    summary = redact(lines[-1].strip()) if lines else "%s: (no output)" % command
     return ("ok" if proc.returncode == 0 else "fail"), summary[:300], time.time() - started
 
 

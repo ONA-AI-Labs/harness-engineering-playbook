@@ -16,7 +16,7 @@ Marmelab's survey found that five of 391 repositories measure whether their harn
 
 ### One line per event
 
-The [guard](../../templates/hooks/scripts/guard-destructive.py) and the [stop check](../../templates/hooks/scripts/require-check-before-stop.py) each append one JSON line per decision to a metrics file (`~/.claude/metrics/harness.jsonl` by default; set `HARNESS_METRICS_FILE` to move it): timestamp, event, decision or status, reason or summary, session, agent type, and the command or repository. The [stats script](../../tools/harness-stats.py) answers the first question a team asks:
+The [guard](../../templates/hooks/scripts/guard-destructive.py) and the [stop check](../../templates/hooks/scripts/require-check-before-stop.py) each append one JSON line per decision to a metrics file (`~/.claude/metrics/harness.jsonl` by default; set `HARNESS_METRICS_FILE` to move it). The file is private and rotated, an allowed command is logged as its program name and a hash only, and the command text kept for ask and deny decisions is redacted of known secret shapes first; `HARNESS_LOG_COMMANDS` switches that between `none`, `redacted` and `full`. A log of what agents tried to run is sensitive by nature: keep it where your other audit logs live. timestamp, event, decision or status, reason or summary, session, agent type, and the command or repository. The [stats script](../../tools/harness-stats.py) answers the first question a team asks:
 
 ```text
 184 events
@@ -26,6 +26,7 @@ The [guard](../../templates/hooks/scripts/guard-destructive.py) and the [stop ch
 last interventions:
   16:02 PreToolUse deny  git push --force origin main   force-push to main/master rewrites shared history
   16:14 PreToolUse ask   rm -rf $S/depstest             the guard cannot resolve that variable; confirm
+  (allowed commands appear as a program name and a hash, never as text)
 ```
 
 The second line of that example is how the guard's first bug was found: three "ask" decisions on scratch-folder cleanups whose paths used a variable set earlier in the same command. The fix shipped within the hour because the log showed it.
